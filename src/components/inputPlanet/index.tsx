@@ -15,10 +15,26 @@ type FormData = {
   name: string;
 };
 
+type FormData2 = {
+  population: any;
+};
+
 const InputPlanet = (props: any) => {
   const { getPlanets, isLoading } = UseGetPlanets();
   const [inputValue, setInputValue] = useState<any>("");
   const [filteredPlanets, setFilteredPlanets] = useState<string[]>([]);
+
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible(true);
+    console.log("isFilterVisible", isFilterVisible);
+  };
+
+  const switchFilter = (name: string) => {
+    props.setFilterName(name);
+    setIsFilterVisible(!isFilterVisible);
+  };
 
   const onSubmit: SubmitHandler<FormData> = async ({ name }) => {
     if (name === "") {
@@ -45,10 +61,37 @@ const InputPlanet = (props: any) => {
     }
   };
 
+  const onSubmitPopulation: SubmitHandler<FormData2> = async ({
+    population,
+  }) => {
+    if (population === undefined) {
+      props.methods.setError("population", {
+        message: "O campo Population não pode ser vazio.",
+      });
+      setTimeout(() => {
+        props.methods.clearErrors("population");
+      }, 5000);
+    } else {
+      const planet = String(population);
+      const planetExist = await getPlanets({ population: planet });
+      const hasPlanet = PlanetsSchema.includes(planet);
+      if (planetExist.data.count === 1 && hasPlanet) {
+        props.setPlanet(planetExist.data.results[0]);
+      } else {
+        props.methods.setError("population", {
+          message: `O planeta com população de ${population} não existe.`,
+        });
+        setTimeout(() => {
+          props.methods.clearErrors("population");
+        }, 3000);
+      }
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
     setInputValue(value);
-    if (value === "") {
+    if (value === "" && props.filterName !== "Population") {
       setFilteredPlanets([]);
     } else {
       const filtered = PlanetsSchema.filter((planet) =>
@@ -101,16 +144,22 @@ const InputPlanet = (props: any) => {
           Discover all the information about Planets of the Star Wars Saga
         </h1>
         <form
-          onSubmit={props.methods.handleSubmit(onSubmit)}
+          onSubmit={props.methods.handleSubmit(
+            props.filterName === "Name" ? onSubmit : onSubmitPopulation
+          )}
           className="w-full flex flex-col items-center gap-2"
         >
           <input
-            {...props.methods.register("name")}
+            {...props.methods.register(
+              props.filterName === "Name" ? "name" : "population"
+            )}
             value={inputValue}
             onChange={handleInputChange}
             className={`max-w-[301px] min-w-[248px] w-full h-[40px] text-center text-sm rounded-[5px] ${lato.className} font-normal`}
             type="text"
-            placeholder="Enter the name in the planet"
+            placeholder={`Enter the ${
+              props.filterName === "Name" ? "name in" : "population number"
+            } the planet`}
           />
           <div className="relative w-full max-w-[301px] min-w-[248px] -mt-2">
             {props.autoFilter && filteredPlanets.length > 0 && (
@@ -130,7 +179,7 @@ const InputPlanet = (props: any) => {
             )}
           </div>
           <Button loading={isLoading} disabled={isLoading} />
-          <div className="flex items-center justify-around gap-4 w-[240px] mt-3 text-white">
+          <div className="relative flex items-center justify-center gap-4 w-[240px] mt-3 text-white">
             <div className="flex gap-2 items-center">
               <div className="w-4 h-4">
                 <Image
@@ -142,24 +191,48 @@ const InputPlanet = (props: any) => {
               </div>
               <p className="font-semibold">Filter: </p>
             </div>
-            <div className="flex gap-1 items-center cursor-pointer">
-              <Image
-                src={"/images/home/chevron-bottom.png"}
-                width={4.89}
-                height={7}
-                alt="filter icon"
-              />
-              <p className="text-sm">Name</p>
-            </div>
-            <div className="flex gap-1 items-center cursor-pointer">
-              <Image
-                src={"/images/home/chevron-bottom.png"}
-                width={4.89}
-                height={7}
-                alt="filter icon"
-              />
-              <p className="text-sm">Population</p>
-            </div>
+            {props.filterName === "Name" && (
+              <div
+                onClick={() => toggleFilterVisibility()}
+                className="flex gap-1 items-center cursor-pointer"
+              >
+                <Image
+                  src={"/images/home/chevron-bottom.png"}
+                  width={4.89}
+                  height={7}
+                  alt="filter icon"
+                />
+                <p className="text-sm">Name</p>
+              </div>
+            )}
+            {props.filterName === "Population" && (
+              <div
+                onClick={() => toggleFilterVisibility()}
+                className="flex gap-1 items-center cursor-pointer"
+              >
+                <Image
+                  src={"/images/home/chevron-bottom.png"}
+                  width={4.89}
+                  height={7}
+                  alt="filter icon"
+                />
+                <p className="text-sm">Population</p>
+              </div>
+            )}
+            {isFilterVisible && (
+              <div className="absolute flex justify-center pt-12 -right-7 w-full items-center">
+                <p
+                  onClick={() =>
+                    switchFilter(
+                      props.filterName === "Name" ? "Population" : "Name"
+                    )
+                  }
+                  className="w-full bg-white text-black z-20"
+                >
+                  {props.filterName === "Name" ? "Population" : "Name"}
+                </p>
+              </div>
+            )}
           </div>
         </form>
         <div

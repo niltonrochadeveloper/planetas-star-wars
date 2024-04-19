@@ -17,6 +17,7 @@ const Home = () => {
   const [valueChange, setValueChange] = useState<string>();
   const [planet, setPlanet] = useState<PlanetProps | null>(null);
   const [autoFilter, setAutoFilter] = useState<boolean>(true);
+  const [filterName, setFilterName] = useState<string>("Name");
 
   const methods = useForm<FormData>();
 
@@ -66,6 +67,8 @@ const Home = () => {
             setValueChange={setValueChange}
             autoFilter={autoFilter}
             setAutoFilter={setAutoFilter}
+            filterName={filterName}
+            setFilterName={setFilterName}
           />
         ) : (
           <CardPlanet planet={planet} setPlanet={setPlanet} />

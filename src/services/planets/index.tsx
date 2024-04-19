@@ -9,12 +9,22 @@ const UseGetPlanets = () => {
   const [id, setId] = useState<number | null>(null);
   const [population, setPopulation] = useState<number | null>(null);
 
-  const getPlanets = ({ name }: { name: string }) => {
+  const getPlanets = ({ name }: { name?: string; population?: string }) => {
     setIsloading(true);
     return api
       .get(`planets${name ? "?search=" + name : ""}`)
       .catch((res) => {
-        return res;
+        if (population) {
+          const planetPopulation = res.results.find((planeta: any) => {
+            if (planeta.population !== "unknown") {
+              return parseInt(planeta.population) === population;
+            }
+            return planetPopulation;
+          });
+        }
+        if (name) {
+          return res;
+        }
       })
       .catch((error) => {
         setIsError(error.message);
