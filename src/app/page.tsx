@@ -16,7 +16,7 @@ type FormData = {
 const Home = () => {
   const [valueChange, setValueChange] = useState<string>();
   const [planet, setPlanet] = useState<PlanetProps | null>(null);
-  const [autoFilter, setAutoFilter] = useState<boolean>(false);
+  const [autoFilter, setAutoFilter] = useState<boolean>(true);
 
   const methods = useForm<FormData>();
 
