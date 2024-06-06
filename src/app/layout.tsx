@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { BackgroundImage } from "@/components";
+import { BackgroundImage } from "@/components/core";
+import StyledComponentsRegistry from "@/lib/registry";
 
 export const metadata: Metadata = {
   title: "Star Wars - Search Planets",
@@ -13,8 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <BackgroundImage>{children}</BackgroundImage>
-    </html>
+    <StyledComponentsRegistry>
+      <html lang="pt-BR">
+        <BackgroundImage>{children}</BackgroundImage>
+      </html>
+    </StyledComponentsRegistry>
   );
 }

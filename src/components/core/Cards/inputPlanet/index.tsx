@@ -1,25 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import Button from "../core/Button";
+import Button from "../../Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { UseGetPlanets } from "@/services";
 import { PlanetsSchema } from "@/constants/planetsSchema";
-import { PlanetProps } from "@/services/planets/types";
+import { PlanetProps } from "@/schemas/planets/types";
 import { useState } from "react";
 import { Lato } from "next/font/google";
+import { FormData2, FormData } from "./types";
 const lato = Lato({ subsets: ["latin"], weight: ["400", "700"] });
 
-type FormData = {
-  name: string;
-};
-
-type FormData2 = {
-  population: any;
-};
-
-const InputPlanet = (props: any) => {
+const InputPlanet: React.FC<any> = (props) => {
   const { getPlanets, isLoading } = UseGetPlanets();
   const [inputValue, setInputValue] = useState<any>("");
   const [filteredPlanets, setFilteredPlanets] = useState<string[]>([]);
@@ -111,7 +104,7 @@ const InputPlanet = (props: any) => {
   return (
     <div
       onClick={() => setFilteredPlanets([])}
-      className={`cardresponsive bg-[#00000077] rounded-[10px] flex justify-between items-center`}
+      className={`cardresponsive bg-[#00000077] rounded-[10px] flex justify-between lg:mb-0 md:mb-0 sm:mb-0 mb-8 items-center`}
     >
       <div className={`imgcard relative w-full`}>
         <Image

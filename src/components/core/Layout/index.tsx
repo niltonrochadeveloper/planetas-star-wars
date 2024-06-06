@@ -1,18 +1,8 @@
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div
-      className={`layoutresponsive`}
-      style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        height: "100%",
-        alignItems: "center",
-      }}
-    >
-      {children}
-    </div>
-  );
+import StyledLayout from "./styles";
+import { LayoutProps } from "./types";
+
+const Layout = ({ children }: LayoutProps) => {
+  return <StyledLayout>{children}</StyledLayout>;
 };
 
 export default Layout;

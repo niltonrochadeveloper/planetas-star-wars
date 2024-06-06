@@ -1,67 +1,43 @@
 "use client";
 
-import { CardPlanet, Footer, InputPlanet } from "@/components";
-import { PlanetProps } from "@/services/planets/types";
-import { Lato } from "next/font/google";
-import Image from "next/image";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-
-const lato = Lato({ subsets: ["latin"], weight: ["400", "700"] });
-
-type FormData = {
-  name: string;
-};
+import {
+  Cards,
+  Content,
+  Footer,
+  Form,
+  Image,
+  Section,
+} from "@/components/core";
+import useHome from "@/hooks/useHome";
 
 const Home = () => {
-  const [valueChange, setValueChange] = useState<string>();
-  const [planet, setPlanet] = useState<PlanetProps | null>(null);
-  const [autoFilter, setAutoFilter] = useState<boolean>(true);
-  const [filterName, setFilterName] = useState<string>("Name");
-
-  const methods = useForm<FormData>();
+  const {
+    methods,
+    errors,
+    setValueChange,
+    planet,
+    autoFilter,
+    filterName,
+    setAutoFilter,
+    setFilterName,
+    setPlanet,
+    valueChange,
+  } = useHome();
 
   return (
-    <section
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
-        height: "100%",
-        width: "100%",
-        overflowX: "hidden",
-      }}
-    >
-      {methods.formState.errors.name?.message && (
-        <small
-          style={{
-            color: "#fff",
-            backgroundColor: "#DE1212",
-            borderRadius: 8,
-            padding: "16px 32px",
-            position: "absolute",
-            top: 16,
-            height: 50,
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {methods.formState.errors.name?.message}
-        </small>
+    <Section.SectionHome>
+      {errors.name?.message && (
+        <Form.ErrorsMessage>{errors.name.message}</Form.ErrorsMessage>
       )}
-      <div className={`page`}>
+      <Content>
         <Image
-          className={`imgTitle`}
           src={"/images/home/title.png"}
-          width={321.55}
+          width={260}
           height={180.41}
           alt="banner left home"
         />
         {!planet ? (
-          <InputPlanet
+          <Cards.InputPlanet
             methods={methods}
             setPlanet={setPlanet}
             setValueChange={setValueChange}
@@ -71,11 +47,11 @@ const Home = () => {
             setFilterName={setFilterName}
           />
         ) : (
-          <CardPlanet planet={planet} setPlanet={setPlanet} />
+          <Cards.PlanetSelected planet={planet} setPlanet={setPlanet} />
         )}
-      </div>
+      </Content>
       <Footer />
-    </section>
+    </Section.SectionHome>
   );
 };
 

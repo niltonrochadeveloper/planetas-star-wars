@@ -1,15 +1,23 @@
 "use client";
 
 import { capitalizeFirstLetter } from "@/helpers/capitalizeFirstLetter";
-import { PlanetProps } from "@/services/planets/types";
+import { PlanetProps } from "@/schemas/planets/types";
 import { PlanetsWithImage } from "@/constants/planetsSchema";
-import Image from "next/image";
+import { Image } from "@/components/core";
 import React, { useEffect, useState } from "react";
+import {
+  ActionContainer,
+  CardContainer,
+  DetailContainer,
+  FlexContainer,
+  GridContainer,
+  InfoContainer,
+  InfoRow,
+  InfoText,
+  InfoTitle,
+} from "./styles";
 
-import { Lato } from "next/font/google";
-const lato = Lato({ subsets: ["latin"], weight: ["400", "700"] });
-
-const CardPlanet = (props: any) => {
+const PlanetSelected: React.FC<any> = (props: any) => {
   const [currentName, setCurrentName] = useState<string>(props.planet.name);
   const [editName, setEditName] = useState<boolean>(false);
   const [edited, setEdited] = useState<boolean>(false);
@@ -33,9 +41,9 @@ const CardPlanet = (props: any) => {
 
   return (
     <div>
-      <div className="max-w-xl min-w-80 mx-4 flex flex-col justify-between lg:w-[592px] md:w-[592px] sm:w-[592px] bg-white rounded-xl p-5 min-h-96">
-        <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2">
-          <div className="flex gap-4 items-center mb-2">
+      <CardContainer>
+        <GridContainer>
+          <FlexContainer>
             {PlanetsWithImage.includes(planet.name.toLowerCase()) && (
               <Image
                 src={`https://cryptospro.com.br/planetas/planeta_000${getIndex(
@@ -47,7 +55,7 @@ const CardPlanet = (props: any) => {
               />
             )}
             <div>
-              <p className="text-sm">{editName ? "Edit planet" : "Planet"}:</p>
+              <InfoText>{editName ? "Edit planet" : "Planet"}:</InfoText>
               {!editName ? (
                 <h2 className="font-black text-lg">
                   {!edited ? planet.name.toUpperCase() : currentName}
@@ -72,10 +80,10 @@ const CardPlanet = (props: any) => {
                 </div>
               )}
             </div>
-          </div>
-          <div className="w-full flex flex-col mb-6 items-center gap-1 justify-center ml-6 lg:ml-0 md:ml-0 sm:ml-0">
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-4 text-sm">
+          </FlexContainer>
+          <DetailContainer>
+            <InfoContainer>
+              <InfoRow>
                 <Image
                   src={"/images/home/card-planet/climate.png"}
                   width={18}
@@ -83,10 +91,10 @@ const CardPlanet = (props: any) => {
                   alt={"climate"}
                 />
                 <div className="flex gap-2 text-sm">
-                  <h3 className="font-semibold">Climate:</h3>
-                  <p>{capitalizeFirstLetter(planet.climate)}</p>
+                  <InfoTitle>Climate:</InfoTitle>
+                  <InfoText>{capitalizeFirstLetter(planet.climate)}</InfoText>
                 </div>
-              </div>
+              </InfoRow>
               <div className="flex gap-4 text-sm">
                 <Image
                   src={"/images/home/card-planet/terrain.png"}
@@ -111,9 +119,9 @@ const CardPlanet = (props: any) => {
                   <p>{planet.population}</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </InfoContainer>
+          </DetailContainer>
+        </GridContainer>
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-2 bg-[#f1f1f1] w-full min-h-28 rounded-lg p-4 ">
             <div className="flex gap-2 items-center">
@@ -160,9 +168,9 @@ const CardPlanet = (props: any) => {
             </div>
           </div>
         </div>
-      </div>
+      </CardContainer>
 
-      <div className="flex items-center gap-3 justify-end my-8 mr-5 text-sm cursor-pointer">
+      <ActionContainer>
         <Image
           src={"/images/home/chevron-left.png"}
           width={7.68}
@@ -175,9 +183,9 @@ const CardPlanet = (props: any) => {
         <button className="text-white" onClick={() => setEditName(true)}>
           Edit Name
         </button>
-      </div>
+      </ActionContainer>
     </div>
   );
 };
 
-export default CardPlanet;
+export default PlanetSelected;
